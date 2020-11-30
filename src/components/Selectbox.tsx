@@ -1,8 +1,8 @@
-export default function SelectBox(){
+export default function SelectBox({setSelected}){
   let optionValues=["All", "Africa", "Americas", "Asia", "Europe", "Oceania"]
   return (
    <div className="flex flex-row justify-start items-center h-12 w-full sm:max-w-xs  rounded  overflow-hidden shadow-md relative ">
-     <select aria-label="Filter by the country" className="h-full w-full px-2 bg-gray-300 dark:bg-gray-900 text-gray-700 dark:text-gray-100  tracking-wide" style={{
+     <select aria-label="Filter by the country" onChange={(e)=>setSelected(e.target.value)} className="h-full w-full px-2 bg-gray-300 dark:bg-gray-900 text-gray-700 dark:text-gray-100  tracking-wide" style={{
        WebkitAppearance:'none'
      }}>
        <option value="" className="hidden ">Filter by the country</option>

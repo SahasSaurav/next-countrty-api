@@ -1,5 +1,5 @@
-import { useState,useEffect } from "react";
-import {useRouter} from 'next/router';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import axios from "axios";
 import ThemeProvider from "../context/ThemeProvider";
 import Navbar from "../components/Navbar";
@@ -8,39 +8,54 @@ import SelectBox from "../components/Selectbox";
 import Countries from "../components/Countries";
 import Loader from "../components/Loader";
 
-export function borderJson({ countries }) {
-  console.log(countries);
-}
-
-export default function Home({ countries, error }) {
-  const router=useRouter();
+export default function Home({ allCountries, error }) {
+  const router = useRouter();
+  const [countries, setCountries] = useState([...allCountries]);
   const [loading, setLoading] = useState(false);
+  const [noMatch, setNoMatch] = useState(false);
+  const [inputValue,setInputValue]=useState('')
+  const [selected,setSelceted]=useState('')
+
+  const searchHandler = async (name = "") => {
+    if (name === "") return;
+    let filteredCountries = allCountries.filter((country) =>
+      country.name.toLowerCase().includes(name)
+    );  
+
+    if (filteredCountries.length) {
+      setCountries([...filteredCountries]), setNoMatch(false);
+    } else {
+      setCountries([]), setNoMatch(true);
+    }
+  };
+
+  const selectHandler=(value)=>{
+    if(value==='all'){
+      setCountries([...allCountries])
+    }else{
+      setCountries(allCountries.filter(country=>country.region.toLowerCase().includes(value)))
+    }
+  }
+
+  useEffect(() => {
+    searchHandler(inputValue.toLowerCase())
+    selectHandler(selected.toLowerCase())
+  }, [inputValue,selected])
+
   
-  // useEffect(() => {
-  //   const handleStart=(url)=>(url!==router.asPath)&&setLoading(true)
-  //   const handleComplete=(url)=>(url!==router.asPath)&&setLoading(false)
-
-  //   router.events.on('routeChangeStart',handleStart)
-  //   router.events.on('routeChangeComplete',handleComplete)
-  //   router.events.on('routeChangeError',handleComplete)
-
-
-  //   return () => {
-  //     router.events.off('routeChangeStart',handleStart)
-  //     router.events.off('routeChangeComplete',handleComplete)
-  //     router.events.off('routeChangeError',handleComplete)
-  //   }
-  // },[router] )
 
   return (
     <ThemeProvider>
       <Navbar />
       <div className="container flex-col sm:flex-row justify-between items-baseline mt-8 mb-4 space-y-5 sm:space-y-0">
-        <Searchbar />
-        <SelectBox />
+        <Searchbar  inputValue={inputValue} setInputValue={setInputValue} />
+        <SelectBox setSelected={setSelceted} />
       </div>
-      {loading?(<Loader task="Fetching" />):(<Countries countries={countries} />)}
-      
+      {loading ? (
+        <Loader task="Fetching" />
+      ) : (
+        <Countries countries={countries} />
+      )}
     </ThemeProvider>
   );
 }
@@ -54,7 +69,7 @@ export async function getStaticProps() {
     });
     return {
       props: {
-        countries: data,
+        allCountries: data,
       },
     };
   } catch (err) {

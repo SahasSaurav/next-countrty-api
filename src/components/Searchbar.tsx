@@ -1,9 +1,9 @@
-import {useState,useContext} from 'react';
+import {useContext} from 'react';
 import { ThemeContext } from '../context/ThemeProvider';
 
-export default function Searchbar(){
+export default function Searchbar({inputValue,setInputValue}){
   const {dark}=useContext(ThemeContext)
-  const [inputValue,setInputValue]=useState('')
+  
   
   return (
     <div className="flex flex-row justify-start items-center h-12 w-full sm:max-w-xs  rounded overflow-hidden bg-gray-50 dark:bg-gray-700 shadow-md">
