@@ -2,9 +2,7 @@ import {useContext} from 'react';
 import { ThemeContext } from '../context/ThemeProvider';
 
 export default function Searchbar({inputValue,setInputValue}){
-  const {dark}=useContext(ThemeContext)
-  
-  
+  const {dark}:any=useContext(ThemeContext)
   return (
     <div className="flex flex-row justify-start items-center h-12 w-full sm:max-w-xs  rounded overflow-hidden bg-gray-50 dark:bg-gray-700 shadow-md">
       <svg className="inline-block w-6 h-6 text-transparent fill-current mx-2 my-auto stroke-2" xmlns="http://www.w3.org/2000/svg">

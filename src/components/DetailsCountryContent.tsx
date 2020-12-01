@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from "next/link";
 import Button from "./Button";
 import Details from "./Details";
@@ -19,17 +20,18 @@ export default function DeatilsCountryContent({
   borders,
 }) {
   return (
-    <section className="grid items-center lg:grid-cols-2 gap-10 lg:mt-16">
+    <section className="grid items-center lg:grid-cols-2 gap-10 lg:mt-16 transition-colors duration-100">
       <div className="max-w-full">
-        <img
+        <Image
           className="w-full object-contain object-left-top"
-          style={{ maxHeight: "350px" }}
+          width="600"
+          height="350"
           src={flag}
           alt={`${name} flag`}
         />
       </div>
       <div className="max-w-full grid gap-6 sm:grid-cols-2">
-        <h2 className="sm:col-span-2 title-font font-semibold text-3xl text-gray-900 transition-colors duration-100 dark:text-gray-50">
+        <h2 className="sm:col-span-2 title-font font-semibold text-3xl text-gray-900  dark:text-gray-50">
           {name}
         </h2>
         <div className="max-w-full">

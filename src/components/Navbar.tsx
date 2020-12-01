@@ -2,7 +2,7 @@ import {  useContext } from "react";
 import { ThemeContext } from "../context/ThemeProvider";
 
 export default function Navbar() {
-  const { dark, toggleTheme } = useContext(ThemeContext);
+  const { dark, toggleTheme }:any = useContext(ThemeContext);
 
 
   return (
