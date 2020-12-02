@@ -32,7 +32,7 @@ export default function DeatailCountry({ country, error, errorMessage }) {
   );
 }
 
-export async function getServerSideProps(context) {
+export async function getStaticProps(context) {
   try {
     const { alphaCode } = context.params;
     const endpoint = `https://restcountries.eu/rest/v2/alpha/${alphaCode}`;
@@ -52,13 +52,13 @@ export async function getServerSideProps(context) {
   }
 }
 
-// export async function getStaticPaths(){
-//   const {data}=await axios.get('https://restcountries.eu/rest/v2/all')
+export async function getStaticPaths(){
+  const {data}=await axios.get('https://restcountries.eu/rest/v2/all')
   
-//   const paths=data.map(country=>({
-//     params:{alphaCode:country.alpha3Code.toString()}
-//   }))
-//   return {
-//     paths, fallback:false
-//   }
-// }
+  const paths=data.map(country=>({
+    params:{alphaCode:country.alpha3Code.toString()}
+  }))
+  return {
+    paths, fallback:false
+  }
+}
