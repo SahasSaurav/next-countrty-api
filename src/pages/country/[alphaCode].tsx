@@ -1,15 +1,19 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import {useState} from 'react';
 import Link from "next/link";
-import axios from "axios";
+import { useQuery } from "react-query";
+
 import BackButton from "../../components/BackButton";
 import Navbar from "../../components/Navbar";
-import DeatailCountryContent from "../../components/DetailsCountryContent"; 
-import borderData from '../../borders.json';
+import DeatailCountryContent from "../../components/DetailsCountryContent";
 
-export default function DeatailCountry({ country, error, errorMessage }) {
-  const [loading, setLoading] = useState(false);
+import borderData from "../../borders.json";
+import { getCountries, specificCountry } from "../../utils/fetch";
+
+const DeatailCountry=({ country })=> {
+  const { data, isLoading, isError } = useQuery("country", specificCountry, {
+    initialData: country,
+  });
   const router = useRouter();
   const { alphaCode } = router.query;
   const { borders } = country;
@@ -20,45 +24,37 @@ export default function DeatailCountry({ country, error, errorMessage }) {
         <title>Country-{alphaCode}</title>
       </Head>
       <Navbar />
-      <div  className="container flex-col">
+      <div className="container flex-col">
         <Link href="/">
           <a>
             <BackButton name="Back" />
           </a>
         </Link>
-        <DeatailCountryContent countryDetail={country} borders={borders} />
+        <DeatailCountryContent countryDetail={data} borders={borders} />
       </div>
     </>
   );
 }
 
+export default DeatailCountry;
+
 export async function getStaticProps(context) {
-  try {
-    const { alphaCode } = context.params;
-    const endpoint = `https://restcountries.eu/rest/v2/alpha/${alphaCode}`;
-    const { data } = await axios.get(endpoint);
-    return {
-      props: {
-        country: data,
-      },
-    };
-  } catch (err) {
-    return {
-      props: {
-        error: true,
-        errorMessage: err.message,
-      },
-    };
-  }
+  const { alphaCode } = context.params;
+  const data = await specificCountry(alphaCode);
+  return {
+    props: {
+      country: data,
+    },
+  };
 }
 
-export async function getStaticPaths(){
-  const {data}=await axios.get('https://restcountries.eu/rest/v2/all')
-  
-  const paths=data.map(country=>({
-    params:{alphaCode:country.alpha3Code.toString()}
-  }))
+export async function getStaticPaths() {
+  const data = await getCountries();
+  const paths = data.map((country) => ({
+    params: { alphaCode: country.alpha3Code.toString() },
+  }));
   return {
-    paths, fallback:false
-  }
+    paths,
+    fallback: false,
+  };
 }
