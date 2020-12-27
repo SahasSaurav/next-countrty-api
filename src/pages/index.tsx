@@ -1,17 +1,21 @@
 import { useRouter } from "next/router";
-import Head from 'next/head';
-import { useState, useEffect} from "react";
-import axios from "axios";
+import Head from "next/head";
+import { useState, useEffect } from "react";
+import { useQuery } from "react-query";
+
 import Navbar from "../components/Navbar";
 import Searchbar from "../components/Searchbar";
 import SelectBox from "../components/Selectbox";
 import Countries from "../components/Countries";
 import Loader from "../components/Loader";
 
-export default function Home({ allCountries, error }) {
+import {getCountries} from '../utils/fetch'
+
+const Home=({ allCountries })=> {
+  const {data,isLoading,isError}=useQuery('allCountries',getCountries,{initialData:allCountries})
+  console.log(isError,isLoading)
   const router = useRouter();
-  const [countries, setCountries] = useState([...allCountries]);
-  const [loading, setLoading] = useState(false);
+  const [countries, setCountries] = useState([...data]);
   const [noMatch, setNoMatch] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [selected, setSelceted] = useState("");
@@ -56,6 +60,8 @@ export default function Home({ allCountries, error }) {
     };
   }, [selected]);
 
+  
+
   return (
     <>
       <Head>
@@ -66,7 +72,7 @@ export default function Home({ allCountries, error }) {
         <Searchbar inputValue={inputValue} setInputValue={setInputValue} />
         <SelectBox setSelected={setSelceted} />
       </div>
-      {loading ? (
+      {isLoading ? (
         <Loader task="Fetching" />
       ) : (
         <Countries countries={countries} />
@@ -80,23 +86,13 @@ export default function Home({ allCountries, error }) {
   );
 }
 
+export default Home;
+
 export async function getStaticProps() {
-  try {
-    const endpoint = `https://restcountries.eu/rest/v2/all`;
-    const { data } = await axios({
-      method: "get",
-      url: endpoint,
-    });
-    return {
-      props: {
-        allCountries: data,
-      },
-    };
-  } catch (err) {
-    return {
-      props: {
-        error: true,
-      },
-    };
-  }
+  const data = await getCountries();
+  return {
+    props: {
+      allCountries: data,
+    },
+  };
 }

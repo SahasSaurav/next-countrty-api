@@ -1,12 +1,23 @@
+import { QueryClient, QueryClientProvider } from "react-query";
 import ThemeProvider from "../context/ThemeProvider";
 import "../styles/index.css";
 
-function MyApp({ Component, pageProps }) {
+const MyApp = ({ Component, pageProps }) => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+      },
+    },
+  });
+
   return (
-    <ThemeProvider>
-      <Component {...pageProps} />
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <Component {...pageProps} />
+      </ThemeProvider>
+    </QueryClientProvider>
   );
-}
+};
 
 export default MyApp;
