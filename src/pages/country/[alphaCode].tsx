@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { useQuery } from "react-query";
+import { QueryClient, useQuery } from "react-query";
 
 import BackButton from "../../components/BackButton";
 import Navbar from "../../components/Navbar";
@@ -10,14 +10,13 @@ import DeatailCountryContent from "../../components/DetailsCountryContent";
 import borderData from "../../borders.json";
 import { getCountries, specificCountry } from "../../utils/fetch";
 
-const DeatailCountry=({ country })=> {
-  const { data, isLoading, isError } = useQuery("country", specificCountry, {
-    initialData: country,
-  });
+const DeatailCountry = ({ country }) => {
   const router = useRouter();
   const { alphaCode } = router.query;
+  const { data, isLoading, isError } = useQuery("country", ()=>specificCountry(alphaCode), {
+    initialData: country,
+  });
   const { borders } = country;
-
   return (
     <>
       <Head>
@@ -34,16 +33,18 @@ const DeatailCountry=({ country })=> {
       </div>
     </>
   );
-}
+};
 
 export default DeatailCountry;
 
 export async function getStaticProps(context) {
   const { alphaCode } = context.params;
-  const data = await specificCountry(alphaCode);
+  const countryData = await specificCountry(alphaCode);
+  console.log(countryData);
+
   return {
     props: {
-      country: data,
+      country: countryData,
     },
   };
 }

@@ -9,11 +9,12 @@ import SelectBox from "../components/Selectbox";
 import Countries from "../components/Countries";
 import Loader from "../components/Loader";
 
-import {getCountries} from '../utils/fetch'
+import { getCountries } from "../utils/fetch";
 
-const Home=({ allCountries })=> {
-  const {data,isLoading,isError}=useQuery('allCountries',getCountries,{initialData:allCountries})
-  console.log(isError,isLoading)
+const Home = ({ allCountries }) => {
+  const { data, isLoading, isError } = useQuery("allCountries", getCountries, {
+    initialData: allCountries,
+  });
   const router = useRouter();
   const [countries, setCountries] = useState([...data]);
   const [noMatch, setNoMatch] = useState(false);
@@ -60,8 +61,6 @@ const Home=({ allCountries })=> {
     };
   }, [selected]);
 
-  
-
   return (
     <>
       <Head>
@@ -84,7 +83,7 @@ const Home=({ allCountries })=> {
       )}
     </>
   );
-}
+};
 
 export default Home;
 
