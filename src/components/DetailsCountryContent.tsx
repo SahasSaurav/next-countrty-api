@@ -1,24 +1,31 @@
 import Image from 'next/image';
 import Link from "next/link";
+import {useRouter} from 'next/router';
+import { borderDetails } from '../utils/fetch';
 import Button from "./Button";
 import Details from "./Details";
-import borderData from "../borders.json";
+// import { useMutation } from 'react-query';
+// import { specificCountry } from '../utils/fetch';
 
-export default function DeatilsCountryContent({
-  countryDetail: {
-    flag,
-    name,
-    population,
-    region,
-    subregion,
-    capital,
-    topLevelDomain,
-    currencies,
-    languages,
-    nativeName,
-  },
-  borders,
-}) {
+export default function DeatilsCountryContent({ countryDetail: {
+  flag,
+  name,
+  population,
+  region,
+  subregion,
+  capital,
+  topLevelDomain,
+  currencies,
+  languages,
+  nativeName,
+},
+borders}) {
+  
+  // const {mutate}=useMutation(specificCountry)
+  
+  const borderObj=borderDetails().then(data=>data).catch(err=>console.log(err))
+  //  const bo=
+  
   return (
     <section className="grid items-center lg:grid-cols-2 gap-10 lg:mt-16 transition-colors duration-100">
       <div className="max-w-full">
@@ -57,14 +64,13 @@ export default function DeatilsCountryContent({
         <h3 className="sm:col-span-2 flex items-baseline text-gray-900 dark:text-gray-100 mb-1">
           <span className=" font-medium text-lg mr-1">Borders:</span>
           <span className="flex flex-wrap">
-            {borders.map((border, index) => (
+            {borders.map((border) => (
               <Link
-                as={`/country/${border}`}
-                href={`/country/[alphacode]`}
-                key={index}
+                href={`/country/${border}`}
+                key={border}
               >
                 <a>
-                  <Button label={border} />
+                  <Button  label={border} />
                 </a>
               </Link>
             ))}

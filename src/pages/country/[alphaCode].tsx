@@ -7,16 +7,19 @@ import BackButton from "../../components/BackButton";
 import Navbar from "../../components/Navbar";
 import DeatailCountryContent from "../../components/DetailsCountryContent";
 
-import borderData from "../../borders.json";
 import { getCountries, specificCountry } from "../../utils/fetch";
 
-const DeatailCountry = ({ country }) => {
+const DeatailCountry = ({ country, bordersDetail }) => {
   const router = useRouter();
   const { alphaCode } = router.query;
-  const { data, isLoading, isError } = useQuery("country", ()=>specificCountry(alphaCode), {
-    initialData: country,
-  });
-  const { borders } = country;
+  const { data, isLoading, isError } = useQuery(
+    ["country", { alphaCode }],
+    () => specificCountry(alphaCode),
+    {
+      initialData: country,
+    }
+  );
+  const { borders } = data;
   return (
     <>
       <Head>
@@ -41,7 +44,6 @@ export async function getStaticProps(context) {
   const { alphaCode } = context.params;
   const countryData = await specificCountry(alphaCode);
   console.log(countryData);
-
   return {
     props: {
       country: countryData,

@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import Head from "next/head";
 import { useState, useEffect } from "react";
 import { useQuery } from "react-query";
@@ -15,7 +14,7 @@ const Home = ({ allCountries }) => {
   const { data, isLoading, isError } = useQuery("allCountries", getCountries, {
     initialData: allCountries,
   });
-  const router = useRouter();
+
   const [countries, setCountries] = useState([...data]);
   const [noMatch, setNoMatch] = useState(false);
   const [inputValue, setInputValue] = useState("");

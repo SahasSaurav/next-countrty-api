@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from "react-query";
+import { Hydrate } from "react-query/hydration";
 import ThemeProvider from "../context/ThemeProvider";
 import "../styles/index.css";
 
@@ -13,9 +14,11 @@ const MyApp = ({ Component, pageProps }) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <Component {...pageProps} />
-      </ThemeProvider>
+      <Hydrate state={pageProps.dehydratedState}>
+        <ThemeProvider>
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </Hydrate>
     </QueryClientProvider>
   );
 };
